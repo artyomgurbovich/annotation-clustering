@@ -62,11 +62,16 @@ final class MapViewController: UIViewController {
 extension MapViewController: MKMapViewDelegate {
     
     func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
-        guard annotation is HotspotAnnotation else { return nil }
-        let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier,
-                                                                   for: annotation)
-        annotationView.clusteringIdentifier = "HotspotsCluster"
-        return annotationView
+        if annotation is HotspotAnnotation {
+            let annotationView = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultAnnotationViewReuseIdentifier, for: annotation)
+            annotationView.clusteringIdentifier = "HotspotsCluster"
+            return annotationView
+        } else if annotation is MKClusterAnnotation {
+            let clusterAnnotationView = mapView.dequeueReusableAnnotationView(withIdentifier: MKMapViewDefaultClusterAnnotationViewReuseIdentifier, for: annotation)
+            return clusterAnnotationView
+        } else {
+            return nil
+        }
     }
     
     func mapView(_ mapView: MKMapView, regionDidChangeAnimated animated: Bool) {
